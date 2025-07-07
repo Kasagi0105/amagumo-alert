@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雨雲アラートPWA</title>
+</head>
+<body>
+  <h1>現在地を取得中...</h1>
+  <p id="location">位置情報を取得中...</p>
+
+  <script>
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const lat = position.coords.latitude.toFixed(5);
+          const lon = position.coords.longitude.toFixed(5);
+          document.getElementById("location").innerText = `緯度: ${lat}, 経度: ${lon}`;
+        },
+        function (error) {
+          document.getElementById("location").innerText = "位置情報の取得に失敗しました。";
+        }
+      );
+    } else {
+      document.getElementById("location").innerText = "この端末では位置情報が使えません。";
+    }
+  </script>
+</body>
+</html>
