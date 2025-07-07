@@ -27,3 +27,45 @@
   </script>
 </body>
 </html>
+<script>
+  const API_KEY = "あなたのAPIキーをここに貼り付け";
+
+  function checkWeather(lat, lon) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ja`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const weather = data.weather[0].description;
+        const rain = data.rain ? data.rain["1h"] : 0;
+        const message = `現在の天気: ${weather} / 1時間の降水量: ${rain}mm`;
+        document.getElementById("weather").innerText = message;
+
+        if (rain > 0) {
+          alert("雨が降っています ☔");
+        }
+      })
+      .catch((error) => {
+        document.getElementById("weather").innerText = "天気データの取得に失敗しました。";
+        console.error(error);
+      });
+  }
+
+  // 位置情報取得
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude.toFixed(5);
+        const lon = position.coords.longitude.toFixed(5);
+        document.getElementById("location").innerText = `緯度: ${lat}, 経度: ${lon}`;
+
+        // 天気確認
+        checkWeather(lat, lon);
+      },
+      function () {
+        document.getElementById("location").innerText = "位置情報の取得に失敗しました。";
+      }
+    );
+  }
+</script>
+<p id="weather">天気情報を取得中...</p>
